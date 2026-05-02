@@ -19,10 +19,11 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 def get_conn():
     return pymysql.connect(
-        host='127.0.0.1',
+        host='mysql.railway.internal',
         user='root',
-        password='123456',
-        database='demo',
+        password='tDRHNBIvWiEJUsKEJQGLvIiFXFoCDFTW',
+        database='railway',
+        port=3306,
         charset='utf8mb4'
     )
 
