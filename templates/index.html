@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- 左侧边栏（修复：添加了缺失的sidebar-left外层div） -->
+    <div class="sidebar-left">
+        <div class="section-title">商品分类</div>
+        <ul class="category-list">
+            <li class="{{ 'active' if current_category == 'all' else '' }}">
+                <a href="/?category=all" style="text-decoration: none; color: inherit;">全部分类</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'Electronics' else '' }}">
+                <a href="/?category=Electronics" style="text-decoration: none; color: inherit;">电子产品</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'Book' else '' }}">
+                <a href="/?category=Book" style="text-decoration: none; color: inherit;">图书教材</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'DailyGoods' else '' }}">
+                <a href="/?category=DailyGoods" style="text-decoration: none; color: inherit;">生活用品</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'SportingGoods' else '' }}">
+                <a href="/?category=SportingGoods" style="text-decoration: none; color: inherit;">运动户外</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'Others' else '' }}">
+                <a href="/?category=Others" style="text-decoration: none; color: inherit;">其他</a>
+            </li>
+        </ul>
+        <div class="section-title" style="margin-top: 24px;">快捷操作</div>
+        <ul class="quick-actions">
+            <li><a href="/add_item" style="text-decoration: none; color: inherit;">📝 发布商品</a></li>
+            <li><a href="/my_orders" style="text-decoration: none; color: inherit;">📦 我的订单</a></li>
+            <li>👤 个人中心</li>
+        </ul>
+    </div>
+
+    <!-- 主内容区：Banner + 最新商品 -->
+    <div class="main-content">
+        <!-- Banner区域 -->
+        <div style="
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            padding: 60px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        ">
+            <div>
+                <h1 style="font-size: 32px; color: white; margin-bottom: 16px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">让闲置流动，让校园更美好</h1>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 24px; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">买卖二手商品，低碳环保，互利共赢</p>
+                <a href="/add_item" class="btn btn-primary" style="padding: 12px 24px; font-size: 16px; text-decoration: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">发布商品</a>
+            </div>
+        </div>
+
+        <!-- 最新商品列表（动态加载数据库最新4个商品） -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2 style="font-size: 18px;">最新商品</h2>
+            <a href="/items?category={{ current_category }}" style="color: var(--primary); text-decoration: none; font-size: 14px;">更多 ></a>
+        </div>
+        <div class="goods-grid">
+            {% for item in latest_items %}
+            <div class="goods-card">
+                <div class="card-img" style="
+                    background-image: url('/static/uploads/{% if item|length > 6 %}{{ item[6] }}{% else %}default.jpg{% endif %}');
+                    background-size: cover;
+                    background-position: center;
+                ">
+                </div>
+                <div class="card-body">
+                    <div class="card-title">{{ item[1] }}</div>
+                    <div class="card-price">¥{{ item[3] }}</div>
+                    <div class="card-meta">
+                        <span>卖家：{{ item[5] }}</span>
+                        <span class="status-tag {% if item[4] == 0 %}unsold{% else %}sold{% endif %}">
+                            {{ "未售" if item[4] == 0 else "已售" }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 右侧边栏 -->
+    <div class="sidebar-right">
+        <div class="card">
+            <div class="card-title">
+                <span>📢 平台公告</span>
+                <a href="#">更多 ></a>
+            </div>
+            <ul style="list-style: none; font-size: 12px; color: var(--text-light);">
+                <li style="margin-bottom: 8px;">• 平台使用规范</li>
+                <li style="margin-bottom: 8px;">• 关于交易安全的提示</li>
+                <li style="margin-bottom: 8px;">• 新功能上线通知</li>
+                <li>• 优秀卖家评选活动</li>
+            </ul>
+        </div>
+        <div class="card">
+            <div class="card-title">📊 交易统计</div>
+            <ul style="list-style: none; font-size: 12px; color: var(--text-light);">
+                <li style="margin-bottom: 8px;">商品总数：156</li>
+                <li style="margin-bottom: 8px;">交易总数：89</li>
+                <li style="margin-bottom: 8px;">用户总数：128</li>
+                <li>今日新增：12</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

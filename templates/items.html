@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- 左侧边栏（和首页一致，直接复用） -->
+    <div class="sidebar-left">
+        <div class="section-title">商品分类</div>
+        <ul class="category-list">
+            <li class="{{ 'active' if current_category == 'all' else '' }}">
+                <a href="/items?category=all" style="text-decoration: none; color: inherit;">全部分类</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'Electronics' else '' }}">
+                <a href="/items?category=Electronics" style="text-decoration: none; color: inherit;">电子产品</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'Book' else '' }}">
+                <a href="/items?category=Book" style="text-decoration: none; color: inherit;">图书教材</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'DailyGoods' else '' }}">
+                <a href="/items?category=DailyGoods" style="text-decoration: none; color: inherit;">生活用品</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'SportingGoods' else '' }}">
+                <a href="/items?category=SportingGoods" style="text-decoration: none; color: inherit;">运动户外</a>
+            </li>
+            <li class="{{ 'active' if current_category == 'Others' else '' }}">
+                <a href="/items?category=Others" style="text-decoration: none; color: inherit;">其他</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 主内容区：商品卡片列表 -->
+    <div class="main-content">
+        <h2 style="font-size: 18px; margin-bottom: 16px;">
+            {% if keyword %}搜索结果："{{ keyword }}"{% else %}所有商品{% endif %}
+        </h2>
+        <div class="goods-grid">
+            {% for item in data %}
+            <div class="goods-card">
+                <!-- 用占位图代替真实商品图片 -->
+                <div class="card-img" style="background-image: url('/static/uploads/{% if item[6] %}{{ item[6] }}{% else %}default.jpg{% endif %}'); background-size: cover; background-position: center;"></div>
+                <div class="card-body">
+                    <div class="card-title">{{ item[1] }}</div>
+                    <div class="card-price">¥{{ item[3] }}</div>
+                    <div class="card-meta">
+                        <span>卖家：{{ item[5] }}</span>
+                        <span class="status-tag {% if item[4] == 0 %}unsold{% else %}sold{% endif %}">
+                            {{ "未售" if item[4] == 0 else "已售" }}
+                        </span>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; gap: 8px;">
+                        <a href="/buy/{{ item[0] }}" class="btn btn-primary" style="text-decoration: none; text-align: center; flex: 1;">购买</a>
+                        <a href="/delete/{{ item[0] }}" class="btn btn-danger" style="text-decoration: none; text-align: center; flex: 1;">删除</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 右侧边栏（和首页一致，可复用） -->
+    <div class="sidebar-right">
+        <div class="card">
+            <div class="card-title">📢 平台公告</div>
+            <ul style="list-style: none; font-size: 12px; color: var(--text-light);">
+                <li style="margin-bottom: 8px;">• 平台使用规范</li>
+                <li style="margin-bottom: 8px;">• 关于交易安全的提示</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

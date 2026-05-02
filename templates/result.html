@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="sidebar-left">
+        <div class="section-title">数据查询</div>
+        <ul class="category-list">
+            <li><a href="/unsold" style="text-decoration:none; color:inherit;">未售商品</a></li>
+            <li><a href="/sold" style="text-decoration:none; color:inherit;">已售商品</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h2 style="font-size: 18px; margin-bottom: 16px;">{{ title }}</h2>
+        {% if data %}
+        <div class="goods-grid">
+            {% for row in data %}
+            <div class="goods-card">
+                <div class="card-img">📷 {{ row[1] if title == '未售商品列表' else row[0] }}</div>
+                <div class="card-body">
+                    {% if title == '未售商品列表' %}
+                        <div class="card-title">{{ row[1] }}</div>
+                        <div class="card-price">¥{{ row[3] }}</div>
+                        <div class="card-meta">
+                            <span>卖家：{{ row[5] }}</span>
+                            <span class="status-tag unsold">未售</span>
+                        </div>
+                    {% else %}
+                        <div class="card-title">商品：{{ row[0] }}</div>
+                        <div class="card-price" style="font-size:14px;">买家：{{ row[1] }}</div>
+                        <div class="card-meta">
+                            <span class="status-tag sold">已售出</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="background:white; border-radius:8px; padding:40px; text-align:center; color:var(--text-light);">
+            <h3>暂无数据</h3>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

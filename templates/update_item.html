@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>修改价格</h2>
+
+<form method="post">
+<input name="item_id" class="form-control mb-2" placeholder="商品ID">
+<input name="price" class="form-control mb-2" placeholder="新价格">
+
+<button class="btn btn-warning">修改</button>
+</form>
+
+{% endblock %}

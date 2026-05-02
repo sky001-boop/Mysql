@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园二手交易平台</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        /* 主题色变量 */
+        :root {
+            --primary: #165DFF;
+            --primary-light: #27374d; /* 适配深色背景的hover色 */
+            --bg: #1a1a1a;
+            --text: #ffffff;
+            --text-light: #999999;
+            --card-bg: #27374d; /* 深灰蓝调卡片背景 */
+            --danger: #F53F3F;
+            --success: #00B42A;
+        }
+        body {
+            /* 半透明深色遮罩 + 校园风格背景图 */
+            background: linear-gradient(rgba(20, 20, 20, 0.75), rgba(20, 20, 20, 0.75)), 
+                        url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;       /* 图片铺满整个屏幕 */
+            background-position: center;  /* 图片居中显示 */
+            background-attachment: fixed; /* 背景固定，不随滚动条移动 */
+            color: var(--text);
+            padding-bottom: 100px;
+        }
+        /* 顶部导航栏 */
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 12px 120px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+        .navbar .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 14px;
+        }
+        .navbar .nav-links a:hover,
+        .navbar .nav-links a.active {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .navbar .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .search-bar input {
+            padding: 8px 12px;
+            border: 1px solid #334155; /* 适配深色背景的边框 */
+            border-radius: 4px 0 0 4px;
+            width: 200px;
+            background-color: #27374d;
+            color: white;
+        }
+        .navbar .search-bar input::placeholder {
+            color: #999;
+        }
+        .navbar .search-bar button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        .navbar .user-info {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+        }
+        .navbar .user-info a {
+            color: var(--text-light);
+            text-decoration: none;
+        }
+        /* 主体布局（侧边栏+主内容+右侧边栏） */
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px 120px;
+        }
+        /* 左侧边栏 */
+        .sidebar-left {
+            width: 180px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 20px;
+            /* 核心修改：把最大高度改短，刚好容纳所有分类+快捷操作 */
+            max-height: 360px;
+            overflow-y: auto;
+        }
+        .sidebar-left .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+        .sidebar-left .category-list,
+        .sidebar-left .quick-actions {
+            list-style: none;
+        }
+        .sidebar-left .category-list li,
+        .sidebar-left .quick-actions li {
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text); /* 文字改成白色 */
+        }
+        .sidebar-left .category-list li:hover,
+        .sidebar-left .category-list li.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+        }
+        /* 右侧边栏 */
+        .sidebar-right {
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .sidebar-right .card {
+            background-color: var(--card-bg); /* 改成深色卡片背景 */
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .sidebar-right .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-right .card-title a {
+            color: var(--primary);
+            font-size: 12px;
+            text-decoration: none;
+        }
+        /* 商品卡片通用样式 */
+        .goods-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .goods-card {
+            background-color: var(--card-bg); /* 改成深色卡片背景 */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        .goods-card:hover {
+            transform: translateY(-2px);
+        }
+        .goods-card .card-img {
+            width: 100%;
+            height: 160px;
+            background-color: #27374d; /* 适配深色背景的图片占位色 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .goods-card .card-body {
+            padding: 12px;
+        }
+        .goods-card .card-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text);
+        }
+        .goods-card .card-price {
+            color: #F53F3F;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .goods-card .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        .goods-card .status-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: white;
+        }
+        .status-tag.sold {
+            background-color: var(--danger);
+        }
+        .status-tag.unsold {
+            background-color: var(--success);
+        }
+        /* 按钮样式 */
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        /* 页脚 */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 16px;
+            margin-top: 40px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="navbar">
+        <div class="logo">
+            <span>📘</span>
+            <span>校园二手交易平台</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="{{ 'active' if request.path == '/' else '' }}">首页</a>
+            <a href="/items" class="{{ 'active' if request.path == '/items' else '' }}">商品</a>
+            <a href="/users" class="{{ 'active' if request.path == '/users' else '' }}">用户</a>
+            <a href="/orders" class="{{ 'active' if request.path == '/orders' else '' }}">订单</a>
+            <a href="#">分类</a>
+
+        </div>
+        <!-- 全局搜索表单（任何页面提交都跳转到商品搜索结果） -->
+        <form class="search-bar" action="/search" method="GET">
+            <input type="text" name="keyword" placeholder="搜索商品...">
+            <button type="submit">🔍</button>
+        </form>
+        <div class="user-info">
+            {% if session.user_name %}
+                <span>欢迎, {{ session.user_name }}</span>
+                <a href="/logout" style="color: var(--text-light); text-decoration: none;">退出</a>
+            {% else %}
+                <a href="/login" style="color: var(--primary); text-decoration: none; font-weight: 500;">登录</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 主体内容（由子页面填充） -->
+    {% block content %}{% endblock %}
+
+<!-- 页脚（调暗蓝色+固定在页面最底部） -->
+<footer style="
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    background-color: #0F4CD0; /* 比原主色 #165DFF 更暗的同色系蓝色，适配深色背景 */
+    color: white; 
+    text-align: center; 
+    padding: 16px; 
+    font-size: 12px;
+">
+    <p>© 2026 校园二手交易平台 | 联系我们 | 帮助中心 | 隐私政策</p>
+    <p style="margin-top: 8px;">本平台仅供学习交流使用</p>
+</footer>
+</body>
+</html>

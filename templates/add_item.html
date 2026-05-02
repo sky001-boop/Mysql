@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="justify-content: center;">
+    <div class="card" style="width: 500px; padding: 30px;">
+        <h2 style="text-align: center; margin-bottom: 24px;">发布新商品</h2>
+        <!-- 【核心修改】表单添加enctype="multipart/form-data"，支持文件上传 -->
+        <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 16px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px;">商品ID</label>
+                <input type="text" name="item_id" required style="width: 100%; padding: 12px; border: 1px solid #334155; border-radius: 4px; background-color: #27374d; color: white;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px;">商品名称</label>
+                <input type="text" name="item_name" required style="width: 100%; padding: 12px; border: 1px solid #334155; border-radius: 4px; background-color: #27374d; color: white;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px;">商品分类</label>
+                <input type="text" name="category" required style="width: 100%; padding: 12px; border: 1px solid #334155; border-radius: 4px; background-color: #27374d; color: white;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px;">商品价格</label>
+                <input type="number" step="0.01" name="price" required style="width: 100%; padding: 12px; border: 1px solid #334155; border-radius: 4px; background-color: #27374d; color: white;">
+            </div>
+            <!-- 【核心新增】商品图片上传字段 -->
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px;">商品图片</label>
+                <input type="file" name="image" accept="image/*" style="width: 100%; padding: 12px; border: 1px solid #334155; border-radius: 4px; background-color: #27374d; color: white;">
+            </div>
+            <button type="submit" class="btn btn-primary" style="padding: 12px; font-size: 16px;">发布商品</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

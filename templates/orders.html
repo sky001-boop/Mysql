@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="sidebar-left">
+        <div class="section-title">订单管理</div>
+        <ul class="category-list">
+            <li class="active">全部订单</li>
+            <li>未完成订单</li>
+            <li>已完成订单</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h2 style="font-size: 18px; margin-bottom: 16px;">
+            {{ title if title else '全部订单' }}
+        </h2>
+        <div class="goods-grid">
+            {% for order in data %}
+            <div class="goods-card">
+                <div class="card-img" style="
+                    background-image: url('/static/uploads/{% if order[1] %}{{ order[1] }}.jpg{% else %}default.jpg{% endif %}');
+                    background-size: cover;
+                    background-position: center;
+                    background-color: #1e293b; /* 兜底深色背景，和主题统一 */
+                ">
+                </div>
+            <div class="card-body">
+                <div class="card-title">订单号：{{ order[0] }}</div>
+                <div class="card-price" style="font-size:14px;">商品ID：{{ order[1] }}</div>
+                <div style="font-size:13px; color:#aaa; margin-bottom:8px;">商品名称：{{ order[2] }}</div>
+                <div class="card-meta" style="flex-direction:column; gap:4px; align-items:flex-start;">
+                    <span>买家ID：{{ order[3] }}</span>
+                    <span>下单时间：{{ order[4] }}</span>
+                    <span class="status-tag sold" style="margin-top:4px;">已完成</span>
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="sidebar-right">
+        <div class="card">
+            <div class="card-title">📊 订单统计</div>
+            <ul style="list-style:none; font-size:12px; color:var(--text-light);">
+                <li style="margin-bottom:8px;">总订单数：{{ data|length }}</li>
+                <li>今日订单：{{ today_orders }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
